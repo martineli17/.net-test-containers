@@ -16,7 +16,6 @@ namespace Tests
         public RedisControllerTest(BaseTestFixture fixture)
         {
             _fixture = fixture;
-            _fixture.StartRedisContainerAsync().Wait();
         }
 
         [Fact(DisplayName = "RedisController - Add | Should Add A New Item")]
@@ -31,6 +30,7 @@ namespace Tests
                 Key = key
             };
             var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            await _fixture.StartRedisContainerAsync();
 
             // Act
             var response = await _fixture.HttpClient.PostAsync("/redis", content);
