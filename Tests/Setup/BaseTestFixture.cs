@@ -20,6 +20,8 @@ namespace Tests
       
         public async Task StartRedisContainerAsync()
         {
+            if (_redisContainer != null) return;
+
             _redisContainer = new TestcontainersBuilder<TestcontainersContainer>()
                                            .WithImage("redis:latest")
                                            .WithExposedPort(6379)
@@ -35,7 +37,9 @@ namespace Tests
         public new void Dispose()
         {
             base.Dispose();
+
             _redisContainer?.StopAsync().Wait();
+            _redisContainer?.CleanUpAsync().Wait();
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
